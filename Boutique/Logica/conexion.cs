@@ -5,7 +5,7 @@ namespace Boutique.Logica
     class conexion
     {
         public static string CN() {
-            return @"Data Source=DELL-PC\MSSQLEXPRESS;Initial Catalog=boutique_bd;Integrated Security=True";
+            return @"Data Source=AVALOS-DESKTOP\SQLEXPRESS;Initial Catalog=boutique_bd;Integrated Security=True";
         }
     }
 }

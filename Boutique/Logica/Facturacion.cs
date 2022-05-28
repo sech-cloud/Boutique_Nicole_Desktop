@@ -68,7 +68,7 @@ namespace Boutique.Logica
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "GuardarFactura";
                 cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
-                cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = date;
+                cmd.Parameters.Add("@date", SqlDbType.Date).Value = date;
                 cmd.Parameters.Add("@customer_id", SqlDbType.Int).Value = customer_id;
                 cmd.Parameters.Add("@document_type_id", SqlDbType.Int).Value = document_type;
                 cmd.Parameters.Add("@status_id", SqlDbType.Int).Value = status;
@@ -200,6 +200,39 @@ namespace Boutique.Logica
 
             Prod.DataSource = dt;
             cnx.Close();
+        }
+
+        public String UpdateQuantity(int id,
+        
+           int cantidad
+           )
+        {
+            string ds;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "actualizarCantidad";
+                cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                cmd.Parameters.Add("@canitdad", SqlDbType.Int).Value = cantidad;
+         
+                cnx.Open();
+                cmd.Connection = cnx;
+                cmd.ExecuteNonQuery();
+
+                ds = "Actualizado";
+                return ds;
+
+            }
+            catch (Exception ex)
+            {
+                ds = "Error al Actualizar: " + ex.Message.ToString();
+                return ds;
+            }
+            finally
+            {
+                cnx.Close();
+            }
         }
     }
 

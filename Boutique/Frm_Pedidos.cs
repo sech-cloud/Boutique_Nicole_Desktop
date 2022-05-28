@@ -22,6 +22,8 @@ namespace Boutique
         Facturacion ftc = new Facturacion();
         int dtf;
 
+        int Upcantidad;
+
         public Frm_Pedidos()
         {
             InitializeComponent();
@@ -67,18 +69,24 @@ namespace Boutique
 
         private void btnagregar_Click(object sender, EventArgs e)
         {
+            if (txtcantidad.Text == "") {
+                MessageBox.Show("Cantidad Erronea", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtcantidad.Focus();
+            }
+            else {
+                int indice_fila = dgvproducto.Rows.Add();
+                DataGridViewRow row = dgvproducto.Rows[indice_fila];
+
+                row.Cells["ID"].Value = dtf + indice_fila;
+                row.Cells["Codigo"].Value = CbProds.SelectedValue;
+                row.Cells["Cantidad"].Value = txtcantidad.Text;
+                row.Cells["Descripcion"].Value = CbProds.Text;
+                row.Cells["PrecioUnitario"].Value = txtprecio.Text;
+                row.Cells["Importe"].Value = decimal.Parse(txtcantidad.Text) * decimal.Parse(txtprecio.Text);
+
+                limpiarCampos();
+            }
             
-            int indice_fila = dgvproducto.Rows.Add();
-            DataGridViewRow row = dgvproducto.Rows[indice_fila];
-
-            row.Cells["ID"].Value = dtf + indice_fila;
-            row.Cells["Codigo"].Value = CbProds.SelectedValue;
-            row.Cells["Cantidad"].Value = txtcantidad.Text;
-            row.Cells["Descripcion"].Value = CbProds.Text;
-            row.Cells["PrecioUnitario"].Value = txtprecio.Text;
-            row.Cells["Importe"].Value = decimal.Parse(txtcantidad.Text) * decimal.Parse(txtprecio.Text);
-
-            limpiarCampos();
 
         }
 
@@ -106,7 +114,10 @@ namespace Boutique
                 double Precio = Convert.ToDouble(GVRow.Cells[4].Value);
                 double Total = Convert.ToDouble(GVRow.Cells[5].Value);
 
+                int NewCant = Upcantidad - Cantidad;
+
                 ftc.InsertDetails(ID, Descripcion, Cantidad, Total, Precio, code, Cod_Prod);
+                ftc.UpdateQuantity(Cod_Prod, NewCant);
 
             }
             
@@ -127,6 +138,7 @@ namespace Boutique
             if(precio.Read() == true)
             {
                 txtprecio.Text = precio["price"].ToString();
+                Upcantidad = Convert.ToInt32(precio["quantityAvailable"].ToString());
             }
             else
             {
@@ -159,12 +171,13 @@ namespace Boutique
         public void imprimir(string Nombre, string NumDoc)
         {
             SaveFileDialog savefile = new SaveFileDialog();
-            savefile.FileName = string.Format("{0}.pdf", DateTime.Now.ToString("ddMMyyyy"));
+            savefile.FileName = string.Format("F{0}.pdf", DateTime.Now.ToString("ddMMyyyy"));
 
             string PaginaHTML_Texto = Properties.Resources.Plantilla.ToString();
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CLIENTE", Nombre);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@DOCUMENTO", NumDoc);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FECHA", DateTime.Now.ToString("dd/MM/yyyy"));
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@BOLETA", "PEDIDO");
 
             string filas = string.Empty;
             decimal total = 0;

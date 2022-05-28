@@ -64,7 +64,7 @@ namespace Boutique.Logica
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "GuardarCompra";
                 cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
-                cmd.Parameters.Add("@date", SqlDbType.VarChar).Value = date;
+                cmd.Parameters.Add("@date", SqlDbType.Date).Value = date;
                 cmd.Parameters.Add("@provider_id", SqlDbType.Int).Value = provider_id;
                 cmd.Parameters.Add("@document_type_id", SqlDbType.Int).Value = document_type;
                 cmd.Parameters.Add("@status_id", SqlDbType.Int).Value = status;

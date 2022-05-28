@@ -99,17 +99,26 @@ namespace Boutique
 
         private void btnagregar_Click(object sender, EventArgs e)
         {
-            int indice_fila = dgvStockUpdate.Rows.Add();
-            DataGridViewRow row = dgvStockUpdate.Rows[indice_fila];
+            if (txtcantidad.Text == "")
+            {
+                MessageBox.Show("Cantidad Erronea", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtcantidad.Focus();
+            }
+            else {
+                int indice_fila = dgvStockUpdate.Rows.Add();
+                DataGridViewRow row = dgvStockUpdate.Rows[indice_fila];
 
-            row.Cells["ID"].Value = dtc + indice_fila;
-            row.Cells["Codigo"].Value = CbProds.SelectedValue;
-            row.Cells["Cantidad"].Value = int.Parse(txtcantidad.Text) + int.Parse(txtNCantidad.Text);
-            row.Cells["Descripcion"].Value = CbProds.Text;
-            row.Cells["PrecioUnitario"].Value = txtUnitario.Text;
-            row.Cells["Costo"].Value = txtPcompra.Text;
+                row.Cells["ID"].Value = dtc + indice_fila;
+                row.Cells["Codigo"].Value = CbProds.SelectedValue;
+                row.Cells["Cantidad"].Value = int.Parse(txtcantidad.Text) + int.Parse(txtNCantidad.Text);
+                row.Cells["Descripcion"].Value = CbProds.Text;
+                row.Cells["PrecioUnitario"].Value = txtUnitario.Text;
+                row.Cells["Costo"].Value = txtPcompra.Text;
 
-            limpiarCampos();
+                limpiarCampos();
+            }
+
+            
         }
 
         private void btnRegistrar_Click(object sender, EventArgs e)
@@ -173,13 +182,13 @@ namespace Boutique
         public void GenerarReport(string Nombre, string NumDoc)
         {
             SaveFileDialog savefile = new SaveFileDialog();
-            savefile.FileName = string.Format("{0}.pdf", DateTime.Now.ToString("ddMMyyyy"));
+            savefile.FileName = string.Format("C{0}.pdf", DateTime.Now.ToString("ddMMyyyy"));
 
             string PaginaHTML_Texto = Properties.Resources.Plantilla.ToString();
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CLIENTE", Nombre);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@DOCUMENTO", NumDoc);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FECHA", DateTime.Now.ToString("dd/MM/yyyy"));
-
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@BOLETA", "COMPRA");
             string filas = string.Empty;
             decimal total = 0;
             foreach (DataGridViewRow row in dgvStockUpdate.Rows)

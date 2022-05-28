@@ -421,3 +421,11 @@ select COUNT(id) as codigo from purchase_details
 end
 
 
+create procedure actualizarCantidad
+@id int,
+@canitdad int
+As Begin
+update products 
+set quantityAvailable = @canitdad
+where id = @id
+end
